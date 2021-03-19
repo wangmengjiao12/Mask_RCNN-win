@@ -1,5 +1,5 @@
 # 文件介绍：
-* 文件夹 train, val：
+* 文件夹 train, val：(仅提交一张，其余需从相应链接下载)
   * 数据集下载：`https://github.com/matterport/Mask_RCNN/releases/download/v2.1/balloon_dataset.zip`
     * 数据集解压放在samples/balloon下
   * 训练权重下载: `https://github.com/matterport/Mask_RCNN/releases/download/v2.1/mask_rcnn_balloon.h5`
