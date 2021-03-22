@@ -12,16 +12,20 @@
 * images -- 一些示例文件，在`demo.py`中使用
 * logs -- 保存日志和训练的模型的目录
 * mrcnn -- ------------------------------------------
-*          __init__.py  --  构成python库
-*          config.py  --  基本配置类
-*          model.py  -- Mask R-CNN模型的主要实现
-*          parallel_model.py  --  对Keras的多GPU支持
-*          utils.py  --  通用实用程序功能和类
-*          visualize.py  --  显示和可视化功能
+*     __init__.py  --  构成python库
+*     config.py  --  基本配置类
+*     model.py  -- Mask R-CNN模型的主要实现
+*     parallel_model.py  --  对Keras的多GPU支持
+*     utils.py  --  通用实用程序功能和类
+*     visualize.py  --  显示和可视化功能
 * samples -- ----------------------------------------
-*          balloon
-*                 train -- 下载解压的训练集
-*                 val --  下载解压的验证集
-*                 inspect_balloon_data -- 
-*                 inspect_balloon_model --  
+*     balloon
+*     coco
+*     kangaroo
+*     nucleus
+*     shapes
+*     shapes_ttf
+*     demo.ipynb
+* json_to_dataset  --  将 Labelme 标注的文件转化为几个文件用于MASK R-CNN 训练与预测
 
+# 
