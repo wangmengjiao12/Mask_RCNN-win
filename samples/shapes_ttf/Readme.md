@@ -16,4 +16,8 @@
 # 项目来源：
 * 链接：`https://github.com/matterport/Mask_RCNN`, `https://github.com/bubbliiiing/mask-rcnn-keras`
 * 自制标注数据集使用
-* 
+
+
+# 可视化：
+* 在根目录输入：`tensorboard --logdir=training:logs/shapes20210322T2055` 即可打开相应的浏览器端口对训练得到的模型进行可视化
+`
