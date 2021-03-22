@@ -15,5 +15,5 @@
 
 # 项目来源：
 * 链接：`https://github.com/matterport/Mask_RCNN`, `https://github.com/bubbliiiing/mask-rcnn-keras`
-* 子集标注数据集使用
+* 自制标注数据集使用
 * 
