@@ -1,6 +1,6 @@
 """
 Mask R-CNN
-Base Configurations class.
+基本配置类.
 
 Copyright (c) 2017 Matterport, Inc.
 Licensed under the MIT License (see LICENSE for details)
@@ -10,41 +10,36 @@ Written by Waleed Abdulla
 import numpy as np
 
 
-# Base Configuration Class
-# Don't use this class directly. Instead, sub-class it and override
-# the configurations you need to change.
+# 基本配置类
+# 不要直接使用此类.
+# 而是对它进行子类化，并覆盖您需要更改的配置.
 
 class Config(object):
-    """Base configuration class. For custom configurations, create a
-    sub-class that inherits from this one and override properties
-    that need to be changed.
+    """基本配置类.
+         对于自定义配置，请创建一个继承自该类的子类，并覆盖需要更改的属性.
     """
-    # Name the configurations. For example, 'COCO', 'Experiment 3', ...etc.
-    # Useful if your code needs to do things differently depending on which
-    # experiment is running.
+
+    # 命名配置. 例如，“ COCO”，“Experiment 3”等.
+    # 如果您的代码需要根据正在运行的实验来做不同的事情，则很有用
     NAME = None  # Override in sub-classes
 
-    # NUMBER OF GPUs to use. When using only a CPU, this needs to be set to 1.
+    # 要使用的GPU数量.
+    # 仅使用CPU时，需要将其设置为1.
     GPU_COUNT = 1
 
-    # Number of images to train with on each GPU. A 12GB GPU can typically
-    # handle 2 images of 1024x1024px.
-    # Adjust based on your GPU memory and image sizes. Use the highest
-    # number that your GPU can handle for best performance.
+    # 每个GPU上要训练的图像数量. 一个12GB的GPU通常可以处理2个1024x1024px的图像.
+    # 根据您的GPU内存和图像大小进行调整. 使用您的GPU可以处理的最高数量以获得最佳性能.
     IMAGES_PER_GPU = 1  # 原是2
 
-    # Number of training steps per epoch
-    # This doesn't need to match the size of the training set. Tensorboard
-    # updates are saved at the end of each epoch, so setting this to a
-    # smaller number means getting more frequent TensorBoard updates.
-    # Validation stats are also calculated at each epoch end and they
-    # might take a while, so don't set this too small to avoid spending
-    # a lot of time on validation stats.
+    # 每个 epoch 的训练步骤数
+    # 不需要匹配训练集的大小.
+    # Tensorboard更新会在每个时期的末尾保存，因此将其设置为较小的数字意味着将获得更频繁的TensorBoard更新.
+    # 验证统计信息也会在每个时期结束时计算，因此可能会花费一些时间，
+    # 因此请不要将其设置得太小，以免在验证统计信息上花费大量时间.
     STEPS_PER_EPOCH = 1000
 
-    # Number of validation steps to run at the end of every training epoch.
-    # A bigger number improves accuracy of validation stats, but slows
-    # down the training.
+    # 在每个训练 epoch 结束时要运行的验证步骤数.
+    # 更大的数字可提高验证统计信息的准确性，但会减慢训练速度.
     VALIDATION_STEPS = 50
 
     # Backbone network architecture
@@ -57,133 +52,125 @@ class Config(object):
     # 参见 model.compute_backbone_shapes
     COMPUTE_BACKBONE_SHAPE = None
 
-    # The strides of each layer of the FPN Pyramid. These values
-    # are based on a Resnet101 backbone.
+    # FPN金字塔每一层的步幅.
+    # 这些值基于Resnet101主干网.
     BACKBONE_STRIDES = [4, 8, 16, 32, 64]
 
-    # Size of the fully-connected layers in the classification graph
+    # 分类图中 全连接层 的大小
     FPN_CLASSIF_FC_LAYERS_SIZE = 1024
 
-    # Size of the top-down layers used to build the feature pyramid
+    # 用于构建 feature pyramid 的自上而下图层的大小
     TOP_DOWN_PYRAMID_SIZE = 256
 
-    # Number of classification classes (including background)
+    # 分类类别的数量(包括背景)
     NUM_CLASSES = 1  # Override in sub-classes
 
-    # Length of square anchor side in pixels
+    # 方形锚边的长度（以像素为单位）
     RPN_ANCHOR_SCALES = (32, 64, 128, 256, 512)
 
-    # Ratios of anchors at each cell (width/height)
-    # A value of 1 represents a square anchor, and 0.5 is a wide anchor
+    # 每个cell 的锚点比率（宽度/高度）
+    # 值1表示方形锚点，值0.5表示宽锚点
     RPN_ANCHOR_RATIOS = [0.5, 1, 2]
 
     # Anchor stride
-    # If 1 then anchors are created for each cell in the backbone feature map.
-    # If 2, then anchors are created for every other cell, and so on.
+    # 如果为1，则会在主干特征图中为每个像元创建锚点.
+    # 如果为2，则为其他所有单元格创建锚点，依此类推.
     RPN_ANCHOR_STRIDE = 1
 
-    # Non-max suppression threshold to filter RPN proposals.
-    # You can increase this during training to generate more propsals.
+    # 非最大抑制阈值，用于过滤RPN建议.
+    # 您可以在训练过程中增加此值以产生更多的建议.
     RPN_NMS_THRESHOLD = 0.7
 
-    # How many anchors per image to use for RPN training
+    # 每个图像要用于RPN训练的锚点数
     RPN_TRAIN_ANCHORS_PER_IMAGE = 256
     
-    # ROIs kept after tf.nn.top_k and before non-maximum suppression
+    # 在 tf.nn.top_k 之后和非最大抑制之前保持的ROI
     PRE_NMS_LIMIT = 6000
 
-    # ROIs kept after non-maximum suppression (training and inference)
+    # 非最大抑制（训练和推理）后保持的ROI
     POST_NMS_ROIS_TRAINING = 2000
     POST_NMS_ROIS_INFERENCE = 1000
 
-    # If enabled, resizes instance masks to a smaller size to reduce
-    # memory load. Recommended when using high-resolution images.
+    # 如果启用，则将实例掩码的大小调整为较小的大小，以减少内存负载.
+    # 在使用高分辨率图像时推荐.
     USE_MINI_MASK = True
     MINI_MASK_SHAPE = (56, 56)  # (height, width) of the mini-mask
 
     # Input image resizing
-    # Generally, use the "square" resizing mode for training and predicting
-    # and it should work well in most cases. In this mode, images are scaled
-    # up such that the small side is = IMAGE_MIN_DIM, but ensuring that the
-    # scaling doesn't make the long side > IMAGE_MAX_DIM. Then the image is
-    # padded with zeros to make it a square so multiple images can be put
-    # in one batch.
-    # Available resizing modes:
-    # none:   No resizing or padding. Return the image unchanged.
-    # square: Resize and pad with zeros to get a square image
-    #         of size [max_dim, max_dim].
-    # pad64:  Pads width and height with zeros to make them multiples of 64.
-    #         If IMAGE_MIN_DIM or IMAGE_MIN_SCALE are not None, then it scales
-    #         up before padding. IMAGE_MAX_DIM is ignored in this mode.
-    #         The multiple of 64 is needed to ensure smooth scaling of feature
-    #         maps up and down the 6 levels of the FPN pyramid (2**6=64).
-    # crop:   Picks random crops from the image. First, scales the image based
-    #         on IMAGE_MIN_DIM and IMAGE_MIN_SCALE, then picks a random crop of
-    #         size IMAGE_MIN_DIM x IMAGE_MIN_DIM. Can be used in training only.
-    #         IMAGE_MAX_DIM is not used in this mode.
+    # 通常，使用 “square” 调整大小模式进行训练和预测，并且在大多数情况下应该可以很好地工作.
+    # 在此模式下，图像按比例放大，使得小边= IMAGE_MIN_DIM，但要确保缩放不会使长边> IMAGE_MAX_DIM.
+    # 然后用零填充图像以使其成为正方形，以便可以将一批图像放入一批中.
+    # 可用的调整大小模式:
+    # none:   没有调整大小或填充. 退回原图.
+    # square: 调整大小并用零填充以得到大小为[max_dim，max_dim]的正方形图像.
+    # pad64:  用零填充宽度和高度，以使其为64的倍数.
+    #         如果IMAGE_MIN_DIM或IMAGE_MIN_SCALE不为None，则在填充前将其放大.
+    #         在此模式下，将忽略IMAGE_MAX_DIM
+    #         需要64的倍数，以确保在FPN金字塔的6个级别上上下平滑地缩放特征图(2 ** 6 = 64)
+    # crop:   从图像中随机选择裁剪.
+    #         首先，根据IMAGE_MIN_DIM和IMAGE_MIN_SCALE缩放图像，
+    #         然后选择大小为IMAGE_MIN_DIM x IMAGE_MIN_DIM的随机裁剪. 仅可用于训练.
+    #         在此模式下不使用IMAGE_MAX_DIM.
     IMAGE_RESIZE_MODE = "square"
     IMAGE_MIN_DIM = 800
     IMAGE_MAX_DIM = 1024
-    # Minimum scaling ratio. Checked after MIN_IMAGE_DIM and can force further
-    # up scaling. For example, if set to 2 then images are scaled up to double
-    # the width and height, or more, even if MIN_IMAGE_DIM doesn't require it.
-    # However, in 'square' mode, it can be overruled by IMAGE_MAX_DIM.
+    # 最小缩放比例.
+    # 在MIN_IMAGE_DIM之后进行检查，可以强制进一步扩大规模.
+    # 例如，如果设置为2，则即使MIN_IMAGE_DIM不需要，图像也会按比例放大以使其宽度和高度加倍，甚至更多.
+    # 但是，在“square”模式下，它可以被IMAGE_MAX_DIM否决
     IMAGE_MIN_SCALE = 0
-    # Number of color channels per image. RGB = 3, grayscale = 1, RGB-D = 4
-    # Changing this requires other changes in the code. See the WIKI for more
-    # details: https://github.com/matterport/Mask_RCNN/wiki
+    # 每个图像的颜色通道数. RGB = 3，grayscale= 1，RGB-D = 4
+    # 更改此要求代码中的其他更改. 有关更多详细信息，请参见WIKI:
+    # https://github.com/matterport/Mask_RCNN/wiki
     IMAGE_CHANNEL_COUNT = 3
 
-    # Image mean (RGB)
+    # 图像均值(RGB)
     MEAN_PIXEL = np.array([123.7, 116.8, 103.9])
 
-    # Number of ROIs per image to feed to classifier/mask heads
-    # The Mask RCNN paper uses 512 but often the RPN doesn't generate
-    # enough positive proposals to fill this and keep a positive:negative
-    # ratio of 1:3. You can increase the number of proposals by adjusting
-    # the RPN NMS threshold.
+    # 每个图像可输入到分类器/mask head的ROI数
+    # Mask RCNN论文使用512，但是RPN通常不会产生足够的积极建议来填补这一点，并保持1：3的正负比率.
+    # 您可以通过调整RPN NMS阈值来增加建议数量.
     TRAIN_ROIS_PER_IMAGE = 200
 
-    # Percent of positive ROIs used to train classifier/mask heads
+    # 用于训练分类器/mask head的正ROI的百分比
     ROI_POSITIVE_RATIO = 0.33
 
     # Pooled ROIs
     POOL_SIZE = 7
     MASK_POOL_SIZE = 14
 
-    # Shape of output mask
-    # To change this you also need to change the neural network mask branch
+    # 输出mask 形状
+    # 要更改此设置，您还需要更改神经网络掩码分支
     MASK_SHAPE = [28, 28]
 
     # Maximum number of ground truth instances to use in one image
+    # 一幅图像中使用的 ground truth 实例的最大数量
     MAX_GT_INSTANCES = 100
 
-    # Bounding box refinement standard deviation for RPN and final detections.
+    # RPN和最终检测的边界框优化标准偏差.
     RPN_BBOX_STD_DEV = np.array([0.1, 0.1, 0.2, 0.2])
     BBOX_STD_DEV = np.array([0.1, 0.1, 0.2, 0.2])
 
-    # Max number of final detections
+    # 最终检测的最大数量
     DETECTION_MAX_INSTANCES = 100
 
-    # Minimum probability value to accept a detected instance
-    # ROIs below this threshold are skipped
+    # 跳过接受检测到的实例ROI低于此阈值的最小概率值
     DETECTION_MIN_CONFIDENCE = 0.7
 
-    # Non-maximum suppression threshold for detection
+    # 检测的非最大抑制阈值
     DETECTION_NMS_THRESHOLD = 0.3
 
     # Learning rate and momentum
-    # The Mask RCNN paper uses lr=0.02, but on TensorFlow it causes
-    # weights to explode. Likely due to differences in optimizer
-    # implementation.
+    # Mask R-CNN 论文使用lr = 0.02，但在TensorFlow上会导致权重爆炸.
+    # 可能是由于优化程序实施方面的差异.
     LEARNING_RATE = 0.001
     LEARNING_MOMENTUM = 0.9
 
     # Weight decay regularization
     WEIGHT_DECAY = 0.0001
 
-    # Loss weights for more precise optimization.
-    # Can be used for R-CNN training setup.
+    # 减轻权重，实现更精确的优化.
+    # 可用于R-CNN训练设置.
     LOSS_WEIGHTS = {
         "rpn_class_loss": 1.,
         "rpn_bbox_loss": 1.,
@@ -197,23 +184,26 @@ class Config(object):
     # the head branches on ROI generated by code rather than the ROIs from
     # the RPN. For example, to debug the classifier head without having to
     # train the RPN.
+    # 使用RPN ROI或外部生成的ROI进行训练对于大多数情况，请保持“真”.
+    # 如果要在代码生成的ROI而不是RPN的ROI上训练头分支，请设置为False.
+    # 例如，无需训练RPN即可调试分类器头
     USE_RPN_ROIS = True
 
-    # Train or freeze batch normalization layers
-    #     None: Train BN layers. This is the normal mode
-    #     False: Freeze BN layers. Good when using a small batch size
-    #     True: (don't use). Set layer in training mode even when predicting
-    TRAIN_BN = False  # Defaulting to False since batch size is often small
+    # 训练或冻结批处理规范化层
+    #     None: 训练BN图层. 这是正常模式
+    #     False: 冻结BN层. 使用小批量时好
+    #     True: (请勿使用). 即使在预测时也将图层设置为训练模式
+    TRAIN_BN = False  # 由于批次大小通常很小，因此默认为False
 
-    # Gradient norm clipping
+    # 梯度范数裁剪
     GRADIENT_CLIP_NORM = 5.0
 
     def __init__(self):
-        """Set values of computed attributes."""
-        # Effective batch size
+        """设置计算属性的值."""
+        # 有效批量
         self.BATCH_SIZE = self.IMAGES_PER_GPU * self.GPU_COUNT
 
-        # Input image size
+        # 输入图像尺寸
         if self.IMAGE_RESIZE_MODE == "crop":
             self.IMAGE_SHAPE = np.array([self.IMAGE_MIN_DIM, self.IMAGE_MIN_DIM,
                 self.IMAGE_CHANNEL_COUNT])
@@ -221,8 +211,8 @@ class Config(object):
             self.IMAGE_SHAPE = np.array([self.IMAGE_MAX_DIM, self.IMAGE_MAX_DIM,
                 self.IMAGE_CHANNEL_COUNT])
 
-        # Image meta data length
-        # See compose_image_meta() for details
+        # 图片元数据长度
+        # 有关详细信息，请参见compose_image_meta()
         self.IMAGE_META_SIZE = 1 + 3 + 3 + 4 + 1 + self.NUM_CLASSES
 
     def to_dict(self):
@@ -231,7 +221,7 @@ class Config(object):
                 if not a.startswith("__") and not callable(getattr(self, a))}
 
     def display(self):
-        """Display Configuration values."""
+        """显示配置值."""
         print("\nConfigurations:")
         for key, val in self.to_dict().items():
             print(f"{key:30} {val}")

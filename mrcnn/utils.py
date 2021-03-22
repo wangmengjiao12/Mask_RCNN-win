@@ -109,7 +109,7 @@ def compute_overlaps_masks(masks1, masks2):
     area1 = np.sum(masks1, axis=0)
     area2 = np.sum(masks2, axis=0)
 
-    # 交叉点和联合
+    # 交叉和联合 IoU
     intersections = np.dot(masks1.T, masks2)
     union = area1[:, None] + area2[None, :] - intersections
     overlaps = intersections / union
@@ -639,7 +639,7 @@ def trim_zeros(x):
 def compute_matches(gt_boxes, gt_class_ids, gt_masks,
                     pred_boxes, pred_class_ids, pred_scores, pred_masks,
                     iou_threshold=0.5, score_threshold=0.0):
-    """Finds matches between prediction and ground truth instances.
+    """查找预测实例与真实情况实例之间的匹配项.
 
     Returns:
         gt_match: 1-D array. For each GT box it has the index of the matched
@@ -648,13 +648,13 @@ def compute_matches(gt_boxes, gt_class_ids, gt_masks,
                     the matched ground truth box.
         overlaps: [pred_boxes, gt_boxes] IoU overlaps.
     """
-    # Trim zero padding
+    # 修剪零填充
     # TODO: cleaner to do zero unpadding upstream
     gt_boxes = trim_zeros(gt_boxes)
     gt_masks = gt_masks[..., :gt_boxes.shape[0]]
     pred_boxes = trim_zeros(pred_boxes)
     pred_scores = pred_scores[:pred_boxes.shape[0]]
-    # Sort predictions by score from high to low
+    # 按分数从高到低对预测进行排序
     indices = np.argsort(pred_scores)[::-1]
     pred_boxes = pred_boxes[indices]
     pred_class_ids = pred_class_ids[indices]
@@ -664,12 +664,12 @@ def compute_matches(gt_boxes, gt_class_ids, gt_masks,
     # Compute IoU overlaps [pred_masks, gt_masks]
     overlaps = compute_overlaps_masks(pred_masks, gt_masks)
 
-    # Loop through predictions and find matching ground truth boxes
+    # 遍历预测并找到匹配的 ground truth boxes
     match_count = 0
     pred_match = -1 * np.ones([pred_boxes.shape[0]])
     gt_match = -1 * np.ones([gt_boxes.shape[0]])
     for i in range(len(pred_boxes)):
-        # Find best matching ground truth box
+        # 找到最匹配的 ground truth box
         # 1. Sort matches by score
         sorted_ixs = np.argsort(overlaps[i])[::-1]
         # 2. Remove low scores
@@ -678,10 +678,10 @@ def compute_matches(gt_boxes, gt_class_ids, gt_masks,
             sorted_ixs = sorted_ixs[:low_score_idx[0]]
         # 3. Find the match
         for j in sorted_ixs:
-            # If ground truth box is already matched, go to next one
+            # 如果 ground truth box 已匹配，请转到下一个
             if gt_match[j] > -1:
                 continue
-            # If we reach IoU smaller than the threshold, end the loop
+            # 如果我们达到的IoU小于阈值，请结束循环
             iou = overlaps[i, j]
             if iou < iou_threshold:
                 break
@@ -698,7 +698,7 @@ def compute_matches(gt_boxes, gt_class_ids, gt_masks,
 def compute_ap(gt_boxes, gt_class_ids, gt_masks,
                pred_boxes, pred_class_ids, pred_scores, pred_masks,
                iou_threshold=0.5):
-    """Compute Average Precision at a set IoU threshold (default 0.5).
+    """在设定的IoU阈值（默认值为0.5）下计算平均精度.
 
     Returns:
     mAP: Mean Average Precision
@@ -706,27 +706,26 @@ def compute_ap(gt_boxes, gt_class_ids, gt_masks,
     recalls: List of recall values at different class score thresholds.
     overlaps: [pred_boxes, gt_boxes] IoU overlaps.
     """
-    # Get matches and overlaps
+    # 获取 matches and overlaps
     gt_match, pred_match, overlaps = compute_matches(
         gt_boxes, gt_class_ids, gt_masks,
         pred_boxes, pred_class_ids, pred_scores, pred_masks,
         iou_threshold)
 
-    # Compute precision and recall at each prediction box step
+    # 在每个预测框步骤中计算精度并调用
     precisions = np.cumsum(pred_match > -1) / (np.arange(len(pred_match)) + 1)
     recalls = np.cumsum(pred_match > -1).astype(np.float32) / len(gt_match)
 
-    # Pad with start and end values to simplify the math
+    # 用开始和结束值填充以简化
     precisions = np.concatenate([[0], precisions, [0]])
     recalls = np.concatenate([[0], recalls, [1]])
 
-    # Ensure precision values decrease but don't increase. This way, the
-    # precision value at each recall threshold is the maximum it can be
-    # for all following recall thresholds, as specified by the VOC paper.
+    # 确保精度值降低但不提高.
+    # 这样，每个召回阈值处的精度值就是VOC文件指定的所有后续召回阈值所能达到的最大值.
     for i in range(len(precisions) - 2, -1, -1):
         precisions[i] = np.maximum(precisions[i], precisions[i + 1])
 
-    # Compute mean AP over recall range
+    # 计算召回范围内的平均 AP
     indices = np.where(recalls[:-1] != recalls[1:])[0] + 1
     mAP = np.sum((recalls[indices] - recalls[indices - 1]) *
                  precisions[indices])
