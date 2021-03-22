@@ -8,7 +8,7 @@
 # 文件介绍
 * assets -- `Readme.md`中使用的图片所在目录
 * BEFORE_DATASET -- 原始标注的数据文件, 例如 0.png, 0.json
-* DATASET -- 经`json_to_dataset`处理后的文件存放目录, imgs, mask, yaml, ~
+* DATASET -- 经`json_to_dataset`处理后的文件存放目录, imgs, mask, yaml, label_viz
 * images -- 一些示例文件，在`demo.py`中使用
 * logs -- 保存日志和训练的模型的目录
 * mrcnn -- ------------------------------------------
