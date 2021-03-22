@@ -5,4 +5,23 @@
 # environment configuration：
 * `https://github.com/huitudou/Environment_configuration`
 
-# 
+# 文件介绍
+* assets -- `Readme.md`中使用的图片所在目录
+* BEFORE_DATASET -- 原始标注的数据文件, 例如 0.png, 0.json
+* DATASET -- 经`json_to_dataset`处理后的文件存放目录, imgs, mask, yaml, ~
+* images -- 一些示例文件，在`demo.py`中使用
+* logs -- 保存日志和训练的模型的目录
+* mrcnn -- ------------------------------------------
+*          __init__.py  --  构成python库
+*          config.py  --  基本配置类
+*          model.py  -- Mask R-CNN模型的主要实现
+*          parallel_model.py  --  对Keras的多GPU支持
+*          utils.py  --  通用实用程序功能和类
+*          visualize.py  --  显示和可视化功能
+* samples -- ----------------------------------------
+*          balloon
+*                 train -- 下载解压的训练集
+*                 val --  下载解压的验证集
+*                 inspect_balloon_data -- 
+*                 inspect_balloon_model --  
+
